@@ -6,8 +6,13 @@ import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
 import InputField from "@/components/forms/InputField";
 import FooterLink from "@/components/forms/FooterLink";
 
+import {signInWithEmail} from "@/lib/actions/auth.actions";
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
+
 const SignIn = () => {
     const methods = useForm<SignInFormData>();
+    const router = useRouter();
     const {
         register,
         handleSubmit,
@@ -15,7 +20,22 @@ const SignIn = () => {
     } = methods;
 
     const onSubmit: SubmitHandler<SignInFormData> = async (data) => {
-        console.log(data);
+        try {
+            const result = await signInWithEmail(data);
+            if (result.success) {
+                router.push("/");
+                toast.success("Welcome back!");
+            } else {
+                toast.error("Sign in failed", {
+                    description: result.error as string,
+                });
+            }
+        } catch (e) {
+            console.error(e);
+            toast.error("Sign in failed", {
+                description: e instanceof Error ? e.message : "An unexpected error occurred",
+            });
+        }
     };
 
     return (

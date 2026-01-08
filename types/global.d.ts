@@ -69,7 +69,7 @@ declare global {
 
     type User = {
         id: string;
-        name: string;
+        name?: string | null;
         email: string;
     };
 

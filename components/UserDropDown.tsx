@@ -13,16 +13,20 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {LogOut} from "lucide-react";
 import NavItems from "@/components/NavItems";
+import { authClient } from "@/lib/better-auth/auth-client";
 
-const UserDropDown = () => {
+const UserDropDown = ({user}:{user:User}) => {
     const router = useRouter()
 
     const handleSignOut = async () => {
-        router.push("/sign-in")
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    router.push("/sign-in");
+                },
+            },
+        });
     }
-
-    const user = { name: "Ronic", email: "ronic@example.com" }
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -37,12 +41,12 @@ const UserDropDown = () => {
                                 alt="@shadcn"
                             />
                             <AvatarFallback className="bg-green-500 text-green-900 text-sm font-bold">
-                                {user.name[0]}
+                                {user.name?.[0] || user.email[0]}
                             </AvatarFallback>
                         </Avatar>
                         <div className="hidden md:flex flex-col items-start">
                         <span className="text-base font-medium text-gray-400">
-                            {user.name}
+                            {user.name || user.email}
                         </span>
                         </div>
                     </Button>
@@ -58,12 +62,12 @@ const UserDropDown = () => {
                                 alt="@shadcn"
                             />
                             <AvatarFallback className="bg-green-500 text-green-900 text-sm font-bold">
-                                {user.name[0]}
+                                {user.name?.[0] || user.email[0]}
                             </AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
                         <span className="text-base font-medium text-gray-400">
-                            {user.name}
+                            {user.name || user.email}
                         </span>
                             <span className="text-sm text-gray-500">
                             {user.email}
