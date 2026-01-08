@@ -44,3 +44,14 @@ export const sendSignUpEmail = inngestClient.createFunction(
         }
     }
 )
+
+export const sendDailyNewSummary = inngestClient.createFunction(
+    {id: "daily-news-summary"},
+    [{event: "app/send.daily.news"}, {cron: "0 12 * * *"}],
+    async ({step}) => {
+        // Step #1 Get all users fir news delivery
+        // Step #2 Fetch personalized news to each user
+        // Step #3 Summarize news bia API for each user
+        // Step #4 Send news summary to each user
+    }
+)
