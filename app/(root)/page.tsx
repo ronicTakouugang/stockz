@@ -18,7 +18,7 @@ const Home = () =>{
                     scriptUrl={`${scriptUrl}market-overview.js`}
                     config={MARKET_OVERVIEW_WIDGET_CONFIG}
                     className="custom-chart"
-                    height={500}
+                    height={300}
                     />
                 </div>
                 <div className='md:col-span xl:col-span-2'>
@@ -27,7 +27,7 @@ const Home = () =>{
                         scriptUrl={`${scriptUrl}stock-heatmap.js`}
                         config={HEATMAP_WIDGET_CONFIG}
                         className="custom-chart"
-                        height={500}
+                        height={300}
                     />
                 </div>
             </section>
@@ -38,7 +38,7 @@ const Home = () =>{
                         scriptUrl={`${scriptUrl}timeline.js`}
                         config={TOP_STORIES_WIDGET_CONFIG}
                         className="custom-chart"
-                        height={500}
+                        height={300}
                     />
                 </div>
                 <div className='h-full md:col-span-1 xl:col-span-2'>
@@ -47,7 +47,7 @@ const Home = () =>{
                         scriptUrl={`${scriptUrl}market-quotes.js`}
                         config={MARKET_DATA_WIDGET_CONFIG}
                         className="custom-chart"
-                        height={500}
+                        height={300}
                     />
                 </div>
             </section>
