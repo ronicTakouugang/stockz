@@ -23,3 +23,14 @@ export async function getWatchlistSymbolsByEmail(email: string): Promise<string[
     return [];
   }
 }
+
+export async function isSymbolInWatchlist(userId: string, symbol: string): Promise<boolean> {
+  try {
+    await connectToDatabase();
+    const item = await Watchlist.findOne({ userId, symbol: symbol.toUpperCase() });
+    return !!item;
+  } catch (error) {
+    console.error(`Error checking watchlist status for user ${userId} and symbol ${symbol}:`, error);
+    return false;
+  }
+}
