@@ -56,7 +56,7 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
 
     useEffect(() => {
         debouncedSearch();
-    }, [searchTerm]);
+    }, [searchTerm, debouncedSearch]);
 
     const handleSelectStock = () => {
         setOpen(false);
@@ -65,7 +65,18 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     return (
         <>
             {renderAs === 'text' ? (
-                <span onClick={() => setOpen(true)} className="search-text">
+                <span 
+                    onClick={() => setOpen(true)} 
+                    className="search-text"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setOpen(true);
+                        }
+                    }}
+                >
             {label}
           </span>
             ): (
@@ -76,7 +87,6 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
             <CommandDialog open={open} onOpenChange={setOpen} className="search-dialog">
                 <div className="search-field">
                     <CommandInput value={searchTerm} onValueChange={setSearchTerm} placeholder="Search stocks..." className="search-input" />
-                    {loading && <Loader2 className="search-loader" />}
                 </div>
                 <CommandList className="search-list">
                     {loading && (
