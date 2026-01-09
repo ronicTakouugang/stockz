@@ -23,7 +23,12 @@ export const connectToDatabase = async () => {
     }
     if(!cached.promise) {
         // @ts-ignore
-        cached.promise = mongoose.connect(MONGODB_URL, { bufferCommands: false });
+        cached.promise = mongoose.connect(MONGODB_URL, { 
+            bufferCommands: false,
+            dbName: 'stock_app', // Specify the database name explicitly
+            connectTimeoutMS: 30000, // 30 seconds
+            socketTimeoutMS: 45000, // 45 seconds
+        });
     }
     try{
         cached.conn = await cached.promise;
