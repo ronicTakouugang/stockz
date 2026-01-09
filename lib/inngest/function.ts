@@ -30,15 +30,23 @@ export const sendSignUpEmail = inngestClient.createFunction(
                         ]
                     }]
             }
-        })
+        }).catch(err => {
+            console.error("Inngest AI inference failed:", err);
+            return null;
+        });
 
         await step.run('send-welcome-email', async () => {
-            const part = response.candidates?.[0]?.content?.parts?.[0];
-            const introText = (part && 'text' in part ? part.text : null) ||'Thanks for joining Signalist. You now have the tools to track markets and make smarter moves.'
+            const part = response?.candidates?.[0]?.content?.parts?.[0];
+            const introText = (part && 'text' in part ? part.text : null) || 'Thanks for joining Stockz. You now have the tools to track markets and make smarter moves.'
 
             const { data: { email, name } } = event;
 
-            return await sendWelcomeEmail({ email, name, intro: introText });
+            try {
+                return await sendWelcomeEmail({ email, name, intro: introText });
+            } catch (error) {
+                console.error("Failed to send welcome email via nodemailer:", error);
+                throw error; // Re-throw to allow Inngest to retry
+            }
         })
 
         return {
@@ -106,13 +114,22 @@ export const sendDailyNewsSummary = inngestClient.createFunction(
 
         // Step #4: (placeholder) Send the emails
         await step.run('send-news-emails', async () => {
-            await Promise.all(
+            const results = await Promise.allSettled(
                 userNewsSummaries.map(async ({ user, newsContent}) => {
                     if(!newsContent) return false;
 
-                    return await sendNewsSummaryEmail({ email: user.email, date: getFormattedTodayDate(), newsContent })
+                    try {
+                        await sendNewsSummaryEmail({ email: user.email, date: getFormattedTodayDate(), newsContent });
+                        return true;
+                    } catch (error) {
+                        console.error(`Failed to send news email to ${user.email}:`, error);
+                        return false;
+                    }
                 })
             )
+            const successful = results.filter(r => r.status === 'fulfilled' && r.value).length;
+            const failed = results.length - successful;
+            console.log(`News delivery: ${successful} sent, ${failed} failed`);
         })
 
         return { success: true, message: 'Daily news summary emails sent successfully' }

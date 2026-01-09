@@ -38,12 +38,12 @@ const StockDetails = async ({ params }: StockDetailsPageProps) => {
                     <TradingViewWidget
                         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
                         config={CANDLE_CHART_WIDGET_CONFIG(upperSymbol)}
-                        height={500}
+                        height={400}
                     />
                     <TradingViewWidget
                         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js"
                         config={BASELINE_WIDGET_CONFIG(upperSymbol)}
-                        height={400}
+                        height={350}
                     />
                 </div>
 
@@ -58,18 +58,18 @@ const StockDetails = async ({ params }: StockDetailsPageProps) => {
                         <TradingViewWidget
                             scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js"
                             config={TECHNICAL_ANALYSIS_WIDGET_CONFIG(upperSymbol)}
-                            height={450}
+                            height={350}
                         />
                     </div>
                     <TradingViewWidget
                         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-symbol-profile.js"
                         config={COMPANY_PROFILE_WIDGET_CONFIG(upperSymbol)}
-                        height={400}
+                        height={350}
                     />
                     <TradingViewWidget
                         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-financials.js"
                         config={COMPANY_FINANCIALS_WIDGET_CONFIG(upperSymbol)}
-                        height={600}
+                        height={500}
                     />
                 </div>
             </div>

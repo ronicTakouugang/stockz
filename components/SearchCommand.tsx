@@ -7,6 +7,7 @@ import {Loader2,  TrendingUp} from "lucide-react";
 import Link from "next/link";
 import {searchStocks} from "@/lib/actions/finnhub.actions";
 import {useDebounce} from "@/hooks/useDebounce";
+import WatchlistButton from "@/components/WatchlistButton";
 
 export default function SearchCommand({ renderAs = 'button', label = 'Add stock', initialStocks }: SearchCommandProps) {
     const [open, setOpen] = useState(false)
@@ -107,21 +108,31 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                             </div>
                             {displayStocks.map((stock) => (
                                 <li key={stock.symbol} className="search-item">
-                                    <Link
-                                        href={`/stocks/${stock.symbol}`}
-                                        onClick={handleSelectStock}
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition-colors"
+                                    <div
+                                        className="flex items-center gap-3 px-4 py-3 hover:bg-gray-800 transition-colors flex-1"
                                     >
                                         <TrendingUp className="h-4 w-4 text-gray-400" />
-                                        <div className="flex-1">
-                                            <div className="text-sm font-medium text-gray-900">
+                                        <Link
+                                            href={`/stocks/${stock.symbol}`}
+                                            onClick={handleSelectStock}
+                                            className="flex-1"
+                                        >
+                                            <div className="text-sm font-medium text-white">
                                                 {stock.name}
                                             </div>
                                             <div className="text-xs text-gray-500">
                                                 {stock.symbol} | {stock.exchange} | {stock.type}
                                             </div>
+                                        </Link>
+                                        <div className="pr-2">
+                                            <WatchlistButton
+                                                symbol={stock.symbol}
+                                                company={stock.name}
+                                                isInWatchlist={stock.isInWatchlist}
+                                                type="icon"
+                                            />
                                         </div>
-                                    </Link>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
