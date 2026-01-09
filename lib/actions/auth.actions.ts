@@ -21,7 +21,7 @@ export const signUpWithEmail = async(data: SignUpFormData) =>{
                     email,
                     name : fullName,
                     country,
-                    investmentGoal: investmentGoals,
+                    investmentGoals: investmentGoals,
                     riskTolerance,
                     preferredIndustry
                 }

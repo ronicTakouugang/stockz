@@ -7,7 +7,7 @@ import { cache } from 'react';
 const FINNHUB_BASE_URL = 'https://finnhub.io/api/v1';
 const NEXT_PUBLIC_FINNHUB_API_KEY = process.env.NEXT_PUBLIC_FINNHUB_API_KEY ?? '';
 
-async function fetchJSON<T>(url: string, revalidateSeconds?: number): Promise<T> {
+export async function fetchJSON<T>(url: string, revalidateSeconds?: number): Promise<T> {
   const options: RequestInit & { next?: { revalidate?: number } } = revalidateSeconds
       ? { cache: 'force-cache', next: { revalidate: revalidateSeconds } }
       : { cache: 'no-store' };
@@ -121,6 +121,32 @@ export const fetchStockDetails = cache(async (symbol: string): Promise<Stock | n
     };
   } catch (err) {
     console.error('Error fetching stock details:', err);
+    return null;
+  }
+});
+
+export const fetchStockQuote = cache(async (symbol: string) => {
+  try {
+    const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
+    if (!token) return null;
+
+    const url = `${FINNHUB_BASE_URL}/quote?symbol=${encodeURIComponent(symbol.toUpperCase())}&token=${token}`;
+    return await fetchJSON<any>(url, 60); // 1 minute revalidation
+  } catch (err) {
+    console.error('Error fetching stock quote:', err);
+    return null;
+  }
+});
+
+export const fetchStockFinancials = cache(async (symbol: string) => {
+  try {
+    const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
+    if (!token) return null;
+
+    const url = `${FINNHUB_BASE_URL}/stock/metric?symbol=${encodeURIComponent(symbol.toUpperCase())}&metric=all&token=${token}`;
+    return await fetchJSON<any>(url, 3600);
+  } catch (err) {
+    console.error('Error fetching stock financials:', err);
     return null;
   }
 });
