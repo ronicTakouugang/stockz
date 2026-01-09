@@ -6,10 +6,24 @@ import {
     SYMBOL_INFO_WIDGET_CONFIG, TECHNICAL_ANALYSIS_WIDGET_CONFIG
 } from "@/lib/constants";
 import WatchlistButton from "@/components/WatchlistButton";
+import {fetchStockDetails} from "@/lib/actions/finnhub.actions";
+import {auth} from "@/lib/better-auth/auth";
+import {headers} from "next/headers";
+import {isSymbolInWatchlist} from "@/lib/actions/watchlist.actions";
 
 const StockDetails = async ({ params }: StockDetailsPageProps) => {
     const { symbol } = await params;
     const upperSymbol = symbol.toUpperCase();
+
+    // Fetch stock details
+    const stock = await fetchStockDetails(upperSymbol);
+
+    // Fetch user and watchlist status
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    const userId = session?.user?.id;
+    const isInWatchlist = userId ? await isSymbolInWatchlist(userId, upperSymbol) : false;
 
     return (
         <section className="w-full flex flex-col gap-10">
@@ -38,8 +52,8 @@ const StockDetails = async ({ params }: StockDetailsPageProps) => {
                     <div className="flex flex-col gap-4">
                         <WatchlistButton
                             symbol={upperSymbol}
-                            company={upperSymbol} // Using symbol as placeholder for company name
-                            isInWatchlist={false} // Defaulting to false, status could be fetched if there was an action
+                            company={stock?.name || upperSymbol}
+                            isInWatchlist={isInWatchlist}
                         />
                         <TradingViewWidget
                             scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js"
