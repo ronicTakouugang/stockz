@@ -98,6 +98,33 @@ export async function getNews(symbols?: string[]): Promise<MarketNewsArticle[]> 
   }
 }
 
+export const fetchStockDetails = cache(async (symbol: string): Promise<Stock | null> => {
+  try {
+    const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
+    if (!token) {
+      console.error('Error in fetchStockDetails: FINNHUB API key is not configured');
+      return null;
+    }
+
+    const url = `${FINNHUB_BASE_URL}/stock/profile2?symbol=${encodeURIComponent(symbol.toUpperCase())}&token=${token}`;
+    const profile = await fetchJSON<any>(url, 3600);
+
+    if (!profile || !profile.name) {
+      return null;
+    }
+
+    return {
+      symbol: symbol.toUpperCase(),
+      name: profile.name,
+      exchange: profile.exchange || 'US',
+      type: profile.ticker ? 'Common Stock' : 'Stock',
+    };
+  } catch (err) {
+    console.error('Error fetching stock details:', err);
+    return null;
+  }
+});
+
 export const searchStocks = cache(async (query?: string): Promise<StockWithWatchlistStatus[]> => {
   try {
     const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
