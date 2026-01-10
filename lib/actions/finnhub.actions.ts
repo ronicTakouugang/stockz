@@ -98,6 +98,27 @@ export async function getNews(symbols?: string[]): Promise<MarketNewsArticle[]> 
   }
 }
 
+export const fetchStockCandles = cache(async (
+    symbol: string,
+    resolution: string = 'D',
+    from: number,
+    to: number
+) => {
+  try {
+    const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
+    if (!token) return null;
+
+    const url = `${FINNHUB_BASE_URL}/stock/candle?symbol=${encodeURIComponent(symbol.toUpperCase())}&resolution=${resolution}&from=${from}&to=${to}&token=${token}`;
+    return await fetchJSON<any>(url, 3600); // Cache for 1 hour
+  } catch (err) {
+    const is403 = err instanceof Error && err.message.includes('403');
+    if (!is403) {
+      console.error('Error fetching stock candles:', err);
+    }
+    return null;
+  }
+});
+
 export const fetchStockDetails = cache(async (symbol: string): Promise<Stock | null> => {
   try {
     const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
