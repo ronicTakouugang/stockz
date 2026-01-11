@@ -35,6 +35,50 @@ interface PredictionChartProps {
   timeframe?: string;
 }
 
+const CustomTooltip = ({ active, payload, label, chartData }) => {
+  if (active && payload && payload.length) {
+    const entry = chartData.find(d => d.date === label);
+    return (
+      <div className="p-2 bg-[#171717] border border-[#262626] rounded-lg text-xs shadow-lg">
+        <p className="text-[#a3a3a3] mb-1">{label}</p>
+        {payload.map((pld) => {
+          let value;
+          const color = pld.color || pld.stroke || pld.fill;
+
+          if (pld.dataKey === 'wick') {
+              return (
+                  <p key={pld.dataKey} style={{ color: entry?.color }}>
+                      {`High/Low: ${entry?.low?.toFixed(2)} - ${entry?.high?.toFixed(2)}`}
+                  </p>
+              );
+          }
+          if (pld.dataKey === 'candle') {
+              return (
+                  <p key={pld.dataKey} style={{ color: entry?.color }}>
+                      {`Open/Close: ${entry?.open?.toFixed(2)} - ${entry?.price?.toFixed(2)}`}
+                  </p>
+              );
+          }
+
+          if (typeof pld.value === 'number') {
+            value = pld.value.toFixed(2);
+          } else {
+            return null; // Don't render if no value
+          }
+
+          return (
+            <p key={pld.dataKey} style={{ color }}>
+              {`${pld.name}: ${value}`}
+            </p>
+          );
+        })}
+      </div>
+    );
+  }
+  return null;
+};
+
+
 const PredictionChart = ({ data, forecast, timeframe = '1M' }: PredictionChartProps) => {
   // Normalize date to start of day in UTC to avoid timezone issues
   const normalizeDate = (t: number) => {
@@ -118,8 +162,8 @@ const PredictionChart = ({ data, forecast, timeframe = '1M' }: PredictionChartPr
   const todayLabel = chartData.find(d => d.timestamp === lastHistoricalTimestamp)?.date;
 
   return (
-    <div className="h-[350px] w-full bg-transparent p-0">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className="w-full bg-transparent p-0">
+      <ResponsiveContainer width="100%" height={350}>
         <ComposedChart data={chartData}>
           <defs>
             <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
@@ -146,9 +190,7 @@ const PredictionChart = ({ data, forecast, timeframe = '1M' }: PredictionChartPr
             domain={['auto', 'auto']}
           />
           <Tooltip 
-            contentStyle={{ backgroundColor: '#171717', border: '1px solid #262626', borderRadius: '8px', fontSize: '10px' }}
-            itemStyle={{ fontSize: '10px', fontWeight: 'bold' }}
-            labelStyle={{ color: '#a3a3a3', marginBottom: '4px' }}
+            content={<CustomTooltip chartData={chartData} />}
           />
           
           {/* Uncertainty Interval - Rendered first so it's in background */}
