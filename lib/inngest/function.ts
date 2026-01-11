@@ -20,7 +20,7 @@ export const sendSignUpEmail = inngestClient.createFunction(
         const prompt = PERSONALIZED_WELCOME_EMAIL_PROMPT.replace('{{userProfile}}', userProfile)
 
         const response = await step.ai.infer('generate-welcome-intro', {
-            model: step.ai.models.gemini({ model: 'gemini-1.5-flash' }),
+            model: step.ai.models.gemini({ model: 'gemini-2.5-flash' }),
             body: {
                 contents: [
                     {
@@ -96,7 +96,7 @@ export const sendDailyNewsSummary = inngestClient.createFunction(
                 const prompt = NEWS_SUMMARY_EMAIL_PROMPT.replace('{{newsData}}', JSON.stringify(articles, null, 2));
 
                 const response = await step.ai.infer(`summarize-news-${user.email}`, {
-                    model: step.ai.models.gemini({ model: 'gemini-1.5-flash' }),
+                    model: step.ai.models.gemini({ model: 'gemini-2.5-flash' }),
                     body: {
                         contents: [{ role: 'user', parts: [{ text:prompt }]}]
                     }

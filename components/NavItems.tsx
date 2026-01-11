@@ -5,6 +5,17 @@ import Link from "next/link";
 import {usePathname} from "next/navigation";
 import SearchCommand from "@/components/SearchCommand";
 
+interface Stock {
+    symbol: string;
+    name: string;
+    exchange: string;
+    type: string;
+}
+
+interface StockWithWatchlistStatus extends Stock {
+    isInWatchlist: boolean;
+}
+
 const NavItems = ({initialStocks}: { initialStocks: StockWithWatchlistStatus[]}) => {
     const pathname = usePathname()
 

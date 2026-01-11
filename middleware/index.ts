@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSessionCookie } from "better-auth/cookies";
+import { auth } from "@/lib/better-auth/auth";
 
 export async function middleware(request: NextRequest) {
-    const sessionCookie = getSessionCookie(request);
+    const session = await auth.api.getSession(request);
 
-    // Check cookie presence - prevents obviously unauthorized users
-    if (!sessionCookie) {
+    if (!session?.user) {
         return NextResponse.redirect(new URL('/sign-in', request.url));
     }
 
@@ -13,6 +12,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+    runtime: "nodejs",
     matcher: [
         '/((?!api|_next/static|_next/image|favicon.ico|sign-in|sign-up|assets).*)',
     ],

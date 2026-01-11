@@ -1,6 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# --- Dependency directories ---
 /node_modules
 /.pnp
 .pnp.*
@@ -10,32 +10,72 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# --- Next.js specific ---
 /.next/
 /out/
-
-# production
+/dist
 /build
 
-# misc
-.DS_Store
-*.pem
+# --- Python specific ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+venv/
+.venv/
+backend/venv/
+.mypy_cache/
+.pytest_cache/
+celerybeat-schedule
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
 
-# debug
+# --- Environment variables ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.test
+.env.production
+.flaskenv
+
+# --- Logs ---
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+backend/*.log # Specific backend logs
 
-# env files (can opt-in for committing if needed)
-.env*
+# --- IDEs and editors ---
+.idea/          # JetBrains IDEs (IntelliJ, PyCharm, WebStorm, etc.)
+.vscode/        # VSCode
+*.iml           # IntelliJ IDEA module files
+*.suo           # Visual Studio User Options
+*.user          # Visual Studio User Options
+*.un~           # Vim backup files
+*.swp           # Vim swap files
+*~              # Emacs backup files
+.#*             # Emacs lock files
 
-# vercel
+# --- OS generated files ---
+.DS_Store
+Thumbs.db
+
+# --- Testing ---
+/coverage
+
+# --- Misc ---
+*.pem
 .vercel
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Backend cache
+backend/cache/
+cache/
