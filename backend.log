@@ -1,0 +1,16 @@
+Importing plotly failed. Interactive plots will not work.
+2026-01-10 19:51:50.988654: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+INFO:     Started server process [44721]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+19:52:27 - cmdstanpy - INFO - Chain [1] start processing
+19:52:29 - cmdstanpy - INFO - Chain [1] done processing
+INFO:     127.0.0.1:55431 - "GET /full-analysis/AAPL?days=7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55452 - "GET /full-analysis/AAPL?days=7 HTTP/1.1" 200 OK
+19:52:51 - cmdstanpy - INFO - Chain [1] start processing
+19:52:52 - cmdstanpy - INFO - Chain [1] done processing
+INFO:     127.0.0.1:55456 - "GET /full-analysis/AAPL?days=30 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55661 - "GET /backtest/AAPL HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56049 - "GET /full-analysis/AAPL?days=30 HTTP/1.1" 200 OK

@@ -10,6 +10,10 @@ import {fetchStockDetails} from "@/lib/actions/finnhub.actions";
 import {auth} from "@/lib/better-auth/auth";
 import {headers} from "next/headers";
 import {isSymbolInWatchlist} from "@/lib/actions/watchlist.actions";
+import PredictionDashboard from "@/components/PredictionDashboard";
+import { TrendingUp } from "lucide-react";
+
+import StockDetailsTabs from "@/components/stocks/StockDetailsTabs";
 
 const StockDetails = async ({ params }: StockDetailsPageProps) => {
     const { symbol } = await params;
@@ -27,52 +31,79 @@ const StockDetails = async ({ params }: StockDetailsPageProps) => {
 
     return (
         <section className="w-full flex flex-col gap-10">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                {/* Left Column */}
-                <div className="lg:col-span-2 flex flex-col gap-10">
+            {/* Header Area */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div className="flex-1">
                     <TradingViewWidget
                         scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js"
                         config={SYMBOL_INFO_WIDGET_CONFIG(upperSymbol)}
-                        height={200}
-                    />
-                    <TradingViewWidget
-                        scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
-                        config={CANDLE_CHART_WIDGET_CONFIG(upperSymbol)}
-                        height={400}
-                    />
-                    <TradingViewWidget
-                        scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js"
-                        config={BASELINE_WIDGET_CONFIG(upperSymbol)}
-                        height={350}
+                        height={160}
                     />
                 </div>
-
-                {/* Right Column */}
-                <div className="flex flex-col gap-10">
-                    <div className="flex flex-col gap-4">
-                        <WatchlistButton
-                            symbol={upperSymbol}
-                            company={stock?.name || upperSymbol}
-                            isInWatchlist={isInWatchlist}
-                        />
-                        <TradingViewWidget
-                            scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js"
-                            config={TECHNICAL_ANALYSIS_WIDGET_CONFIG(upperSymbol)}
-                            height={350}
-                        />
-                    </div>
-                    <TradingViewWidget
-                        scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-symbol-profile.js"
-                        config={COMPANY_PROFILE_WIDGET_CONFIG(upperSymbol)}
-                        height={350}
-                    />
-                    <TradingViewWidget
-                        scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-financials.js"
-                        config={COMPANY_FINANCIALS_WIDGET_CONFIG(upperSymbol)}
-                        height={500}
+                <div className="pb-4">
+                    <WatchlistButton
+                        symbol={upperSymbol}
+                        company={stock?.name || upperSymbol}
+                        isInWatchlist={isInWatchlist}
                     />
                 </div>
             </div>
+
+            <StockDetailsTabs
+                overview={
+                    <div className="flex flex-col gap-10">
+                        <TradingViewWidget
+                            scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
+                            config={CANDLE_CHART_WIDGET_CONFIG(upperSymbol)}
+                            height={600}
+                        />
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                            <TradingViewWidget
+                                scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js"
+                                config={TECHNICAL_ANALYSIS_WIDGET_CONFIG(upperSymbol)}
+                                height={450}
+                            />
+                            <TradingViewWidget
+                                scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js"
+                                config={BASELINE_WIDGET_CONFIG(upperSymbol)}
+                                height={450}
+                            />
+                        </div>
+                    </div>
+                }
+                forecast={
+                    <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="p-2 bg-green-500/10 rounded-lg">
+                                <TrendingUp className="h-6 w-6 text-green-500" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-white tracking-tight">AI Prediction Engine</h2>
+                                <p className="text-sm text-gray-400">Advanced ML & Technical Analysis Forecast</p>
+                            </div>
+                        </div>
+                        <PredictionDashboard symbol={upperSymbol} />
+                    </div>
+                }
+                financials={
+                    <div className="grid grid-cols-1 gap-10">
+                        <TradingViewWidget
+                            scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-financials.js"
+                            config={COMPANY_FINANCIALS_WIDGET_CONFIG(upperSymbol)}
+                            height={800}
+                        />
+                    </div>
+                }
+                company={
+                    <div className="grid grid-cols-1 gap-10">
+                        <TradingViewWidget
+                            scriptUrl="https://s3.tradingview.com/external-embedding/embed-widget-symbol-profile.js"
+                            config={COMPANY_PROFILE_WIDGET_CONFIG(upperSymbol)}
+                            height={600}
+                        />
+                    </div>
+                }
+            />
         </section>
     );
 };
