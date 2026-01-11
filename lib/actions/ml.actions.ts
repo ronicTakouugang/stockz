@@ -15,7 +15,11 @@ import { headers } from "next/headers";
 import Usage from "@/database/models/usage.model";
 import { connectToDatabase } from "@/database/mongoose";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const apiKey = process.env.GEMINI_API_KEY;
+if (!apiKey) {
+    console.error("GEMINI_API_KEY is not set. AI analysis will be disabled.");
+}
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 export async function getStockAnalysis(symbol: string, days: number = 30) {
   try {
@@ -135,6 +139,10 @@ export async function getStockAnalysis(symbol: string, days: number = 30) {
       recentPrices: close.slice(-10),
     };
 
+    if (!genAI) {
+      return { success: false, error: "AI services are not configured. GEMINI_API_KEY is missing." };
+    }
+    
     // AI Analysis using Gemini (augmented with Python ML results if available)
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     
@@ -187,15 +195,21 @@ export async function getStockAnalysis(symbol: string, days: number = 30) {
     const response = await result.response;
     const text = response.text();
     
+    let prediction;
+    try {
+        const jsonStr = text.replace(/```json/g, "").replace(/```/g, "").trim();
+        prediction = JSON.parse(jsonStr);
+    } catch(e) {
+        console.error("Failed to parse AI response:", e, "\nRaw response:", text);
+        return { success: false, error: "AI response was not valid JSON." };
+    }
+    
     // Increment usage only after successful AI response
     await Usage.findOneAndUpdate(
       { userId, date: today },
       { $inc: { count: 1 } },
       { upsert: true }
     );
-    
-    const jsonStr = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    const prediction = JSON.parse(jsonStr);
 
     return {
       success: true,

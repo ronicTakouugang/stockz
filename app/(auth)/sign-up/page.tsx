@@ -12,6 +12,16 @@ import {useRouter} from "next/navigation";
 import {signUpWithEmail} from "@/lib/actions/auth.actions";
 import {toast} from "sonner";
 
+interface SignUpFormData {
+    fullName: string;
+    email: string;
+    password: string;
+    country: string;
+    investmentGoals: string;
+    riskTolerance: string;
+    preferredIndustry: string;
+}
+
 const SignUp = () => {
     const methods = useForm<SignUpFormData>();
     const router = useRouter();

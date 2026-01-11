@@ -1,3 +1,5 @@
+import { Control, UseFormRegister, FieldError, RegisterOptions } from "react-hook-form";
+
 declare global {
     type SignInFormData = {
         email: string;

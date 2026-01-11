@@ -57,7 +57,6 @@ const AlertModal = ({
         setLoading(true)
         try {
             const result = await createAlert({
-                userId: session.user.id,
                 symbol,
                 company,
                 alertName,

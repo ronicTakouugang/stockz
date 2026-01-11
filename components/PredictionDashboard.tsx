@@ -263,10 +263,10 @@ const PredictionDashboard = ({ symbol }: PredictionDashboardProps) => {
             </h3>
             <div className="grid grid-cols-2 gap-y-4">
                {[
-                 { label: "Net Return", val: `${pythonData?.backtest?.total_return.toFixed(1)}%`, color: "text-white" },
-                 { label: "Win Rate", val: `${pythonData?.backtest?.win_rate.toFixed(1)}%`, color: "text-[#00FF94]" },
-                 { label: "Sharpe Ratio", val: pythonData?.backtest?.sharpe_ratio.toFixed(2), color: "text-blue-400" },
-                 { label: "Max Drawdown", val: `${pythonData?.backtest?.max_drawdown.toFixed(1)}%`, color: "text-[#FF4B4B]" }
+                 { label: "Net Return", val: typeof pythonData?.backtest?.total_return === 'number' ? `${pythonData.backtest.total_return.toFixed(1)}%` : '--', color: "text-white" },
+                 { label: "Win Rate", val: typeof pythonData?.backtest?.win_rate === 'number' ? `${pythonData.backtest.win_rate.toFixed(1)}%` : '--', color: "text-[#00FF94]" },
+                 { label: "Sharpe Ratio", val: typeof pythonData?.backtest?.sharpe_ratio === 'number' ? pythonData.backtest.sharpe_ratio.toFixed(2) : '--', color: "text-blue-400" },
+                 { label: "Max Drawdown", val: typeof pythonData?.backtest?.max_drawdown === 'number' ? `${pythonData.backtest.max_drawdown.toFixed(1)}%` : '--', color: "text-[#FF4B4B]" }
                ].map((item, idx) => (
                  <div key={idx}>
                     <div className="text-[9px] text-gray-500 uppercase font-black tracking-tighter mb-0.5">{item.label}</div>

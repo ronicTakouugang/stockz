@@ -78,3 +78,4 @@ next-env.d.ts
 
 # Backend cache
 backend/cache/
+cache/

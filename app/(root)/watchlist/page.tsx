@@ -33,7 +33,7 @@ const WatchlistPage = async () => {
         priceFormatted: quote?.c ? formatPrice(quote.c) : 'N/A',
         changeFormatted: quote?.dp ? formatChangePercent(quote.dp) : 'N/A',
         marketCap: financials?.metric?.marketCapitalization
-          ? formatMarketCapValue(financials.metric.marketCapitalization)
+          ? formatMarketCapValue(financials.metric.marketCapitalization * 1_000_000)
           : 'N/A',
         peRatio: financials?.metric?.peExclExtraTTM
           ? financials.metric.peExclExtraTTM.toFixed(2)

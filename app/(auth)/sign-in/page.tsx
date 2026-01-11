@@ -10,6 +10,11 @@ import {signInWithEmail} from "@/lib/actions/auth.actions";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 
+interface SignInFormData {
+    email: string;
+    password: string;
+}
+
 const SignIn = () => {
     const methods = useForm<SignInFormData>();
     const router = useRouter();
