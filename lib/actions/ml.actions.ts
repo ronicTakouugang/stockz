@@ -51,7 +51,8 @@ export async function getStockAnalysis(symbol: string, days: number = 30) {
     // 1. Try Python Backend first as it's now optimized and provides fallback data
     let pythonData = null;
     try {
-      const pyRes = await fetch(`http://localhost:8000/full-analysis/${symbol}?days=${days}`);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+      const pyRes = await fetch(`${backendUrl}/full-analysis/${symbol}?days=${days}`);
       if (pyRes.ok) {
         pythonData = await pyRes.json();
       }
