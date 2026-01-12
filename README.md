@@ -8,10 +8,7 @@ This project is a full-stack stock analysis and prediction application. The fron
 
 ## ⚠️ IMPORTANT SECURITY WARNING ⚠️
 
-**It appears that project credentials have been accidentally committed to the git history. You must take the following steps immediately:**
-
-1.  **Rotate all leaked credentials:** This includes your MongoDB password, Gemini API Key, Nodemailer password, and Finnhub API key. Generate new keys and passwords for all services.
-2.  **Clean your git history:** You must remove the `.env` files from your entire git history to prevent them from being accessible in previous commits. This is a destructive operation. [This GitHub documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository) provides a guide on how to do this.
+**this PR contains leaked secrets and must not be merged until credentials are rotated and history rewritten,** and ensure the warning lists the required actions (rotate keys/passwords and remove .env from history) so reviewers treat the PR as blocked
 
 ---
 
@@ -70,7 +67,7 @@ To run the application, you need to start both the backend and the frontend serv
     ```bash
     ./start_backend.sh
     ```
-    The backend will be running on `http://0.0.0.0:8000`.
+    The backend will be running on `http://localhost:8000`.
 
 2.  **Start the Frontend Server:**
 
