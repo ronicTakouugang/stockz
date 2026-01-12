@@ -7,7 +7,7 @@ This guide provides step-by-step instructions for deploying the full-stack stock
 
 We will deploy the frontend on **Vercel** and the backend on **Render**. Both platforms offer generous free tiers.
 
----
+---If i want to 
 
 ## 1. Backend Deployment (Render)
 
