@@ -32,7 +32,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # --- Environment variables ---
-.env
+.envadd
 .env.local
 .env.development.local
 .env.test.local
@@ -79,3 +79,5 @@ next-env.d.ts
 # Backend cache
 backend/cache/
 cache/
+
+

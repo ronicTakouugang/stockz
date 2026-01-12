@@ -35,7 +35,14 @@ interface PredictionChartProps {
   timeframe?: string;
 }
 
-const CustomTooltip = ({ active, payload, label, chartData }) => {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string | number;
+  chartData: any[];
+}
+
+const CustomTooltip = ({ active, payload, label, chartData }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     const entry = chartData.find(d => d.date === label);
     return (
