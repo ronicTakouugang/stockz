@@ -24,7 +24,7 @@ export function calculateEMA(data: number[], period: number): (number | null)[] 
       prevEMA = sum / period;
       ema.push(prevEMA);
     } else {
-      const currentEMA = data[i] * k + prevEMA! * (1 - k);
+      const currentEMA: number = data[i] * k + prevEMA! * (1 - k);
       prevEMA = currentEMA;
       ema.push(currentEMA);
     }

@@ -51,7 +51,8 @@ export async function getStockAnalysis(symbol: string, days: number = 30) {
     // 1. Try Python Backend first as it's now optimized and provides fallback data
     let pythonData = null;
     try {
-      const pyRes = await fetch(`http://localhost:8000/full-analysis/${symbol}?days=${days}`);
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+      const pyRes = await fetch(`${backendUrl}/full-analysis/${symbol}?days=${days}`);
       if (pyRes.ok) {
         pythonData = await pyRes.json();
       }
@@ -111,10 +112,10 @@ export async function getStockAnalysis(symbol: string, days: number = 30) {
     if (spyClose.length >= 30 && close.length >= 30) {
       const s1 = close.slice(-30);
       const s2 = spyClose.slice(-30);
-      const m1 = s1.reduce((a, b) => a + b, 0) / 30;
-      const m2 = s2.reduce((a, b) => a + b, 0) / 30;
-      const num = s1.reduce((a, b, i) => a + (b - m1) * (s2[i] - m2), 0);
-      const den = Math.sqrt(s1.reduce((a, b) => a + Math.pow(b - m1, 2), 0) * s2.reduce((a, b) => a + Math.pow(b - m2, 2), 0));
+      const m1 = s1.reduce((a: number, b: number) => a + b, 0) / 30;
+      const m2 = s2.reduce((a: number, b: number) => a + b, 0) / 30;
+      const num = s1.reduce((a: number, b: number, i: number) => a + (b - m1) * (s2[i] - m2), 0);
+      const den = Math.sqrt(s1.reduce((a: number, b: number) => a + Math.pow(b - m1, 2), 0) * s2.reduce((a: number, b: number) => a + Math.pow(b - m2, 2), 0));
       correlation = den !== 0 ? num / den : 0;
     }
 

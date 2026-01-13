@@ -20,7 +20,7 @@ export async function fetchJSON<T>(url: string, revalidateSeconds?: number): Pro
   return (await res.json()) as T;
 }
 
-export { fetchJSON };
+
 
 export async function getNews(symbols?: string[]): Promise<MarketNewsArticle[]> {
   try {
