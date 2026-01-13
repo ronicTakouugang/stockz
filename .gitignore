@@ -40,6 +40,7 @@ pip-delete-this-directory.txt
 .env.development
 .env.test
 .env.production
+backend/.env
 .flaskenv
 
 # --- Logs ---
@@ -79,3 +80,5 @@ next-env.d.ts
 # Backend cache
 backend/cache/
 cache/
+
+
