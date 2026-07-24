@@ -82,3 +82,4 @@ backend/cache/
 cache/
 
 
+.env*
