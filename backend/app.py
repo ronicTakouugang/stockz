@@ -34,7 +34,7 @@ os.makedirs(CACHE_DIR, exist_ok=True)
 CACHE_DIR_REAL_PATH = os.path.realpath(CACHE_DIR)
 
 try:
-    stock_predictor_instance = StockPredictor() # Renamed to avoid conflict with local 'predictor'
+    stock_predictor_instance = StockPredictor("SPY") # Renamed to avoid conflict with local 'predictor'
 except Exception as e:
     logger.error(f"Failed to load stock predictor: {e}")
     stock_predictor_instance = None
