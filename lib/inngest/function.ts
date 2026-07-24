@@ -1,60 +1,10 @@
 import {inngestClient} from "@/lib/inngest/client";
-import {NEWS_SUMMARY_EMAIL_PROMPT, PERSONALIZED_WELCOME_EMAIL_PROMPT} from "@/lib/inngest/prompt";
-import {sendNewsSummaryEmail, sendWelcomeEmail} from "@/lib/nodemailer";
+import {NEWS_SUMMARY_EMAIL_PROMPT} from "@/lib/inngest/prompt";
+import {sendNewsSummaryEmail} from "@/lib/nodemailer";
 import {getAllUsersForNewsEmail} from "@/lib/actions/user.actions";
 import { getWatchlistSymbolsByEmail } from "@/lib/actions/watchlist.actions";
 import { getNews } from "@/lib/actions/finnhub.actions";
 import { getFormattedTodayDate } from "@/lib/utils";
-
-export const sendSignUpEmail = inngestClient.createFunction(
-    { id: 'sign-up-email' },
-    { event: 'app/user.created'},
-    async ({ event, step }) => {
-        const userProfile = `
-            - Country: ${event.data.country}
-            - Investment goals: ${event.data.investmentGoals}
-            - Risk tolerance: ${event.data.riskTolerance}
-            - Preferred industry: ${event.data.preferredIndustry}
-        `
-
-        const prompt = PERSONALIZED_WELCOME_EMAIL_PROMPT.replace('{{userProfile}}', userProfile)
-
-        const response = await step.ai.infer('generate-welcome-intro', {
-            model: step.ai.models.gemini({ model: 'gemini-2.5-flash' }),
-            body: {
-                contents: [
-                    {
-                        role: 'user',
-                        parts: [
-                            { text: prompt }
-                        ]
-                    }]
-            }
-        }).catch(err => {
-            console.error("Inngest AI inference failed:", err);
-            return null;
-        });
-
-        await step.run('send-welcome-email', async () => {
-            const part = response?.candidates?.[0]?.content?.parts?.[0];
-            const introText = (part && 'text' in part ? part.text : null) || 'Thanks for joining Stockz. You now have the tools to track markets and make smarter moves.'
-
-            const { data: { email, name } } = event;
-
-            try {
-                return await sendWelcomeEmail({ email, name, intro: introText });
-            } catch (error) {
-                console.error("Failed to send welcome email via nodemailer:", error);
-                throw error; // Re-throw to allow Inngest to retry
-            }
-        })
-
-        return {
-            success: true,
-            message: 'Welcome email sent successfully'
-        }
-    }
-)
 
 export const sendDailyNewsSummary = inngestClient.createFunction(
     { id: 'daily-news-summary' },

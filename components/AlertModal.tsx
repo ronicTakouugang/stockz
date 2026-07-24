@@ -21,7 +21,6 @@ import {
 import { ALERT_TYPE_OPTIONS } from '@/lib/constants'
 import { createAlert } from '@/lib/actions/alert.actions'
 import { toast } from 'sonner'
-import { authClient } from '@/lib/better-auth/auth-client'
 
 const AlertModal = ({
     open,
@@ -41,14 +40,7 @@ const AlertModal = ({
     const [alertType, setAlertType] = useState<'upper' | 'lower'>('upper')
     const [threshold, setThreshold] = useState(currentPrice?.toString() || '')
 
-    const { data: session } = authClient.useSession()
-
     const handleCreateAlert = async () => {
-        if (!session?.user) {
-            toast.error('You must be logged in to set an alert')
-            return
-        }
-
         if (!threshold || isNaN(parseFloat(threshold))) {
             toast.error('Please enter a valid price threshold')
             return

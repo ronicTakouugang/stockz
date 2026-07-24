@@ -10,8 +10,7 @@ import {
   calculateATR 
 } from "@/lib/ml/indicators";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { auth } from "@/lib/better-auth/auth";
-import { headers } from "next/headers";
+import { getAnonymousId } from "@/lib/actions/anonymous.actions";
 import Usage from "@/database/models/usage.model";
 import { connectToDatabase } from "@/database/mongoose";
 
@@ -24,15 +23,7 @@ const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 export async function getStockAnalysis(symbol: string, days: number = 30) {
   try {
     // 0. Check Usage Limit
-    const session = await auth.api.getSession({
-      headers: await headers()
-    });
-
-    if (!session?.user) {
-      return { success: false, error: "Unauthorized. Please sign in to use AI analysis." };
-    }
-
-    const userId = session.user.id;
+    const userId = await getAnonymousId();
     const today = new Date().toISOString().split('T')[0];
 
     await connectToDatabase();

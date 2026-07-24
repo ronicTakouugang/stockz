@@ -1,22 +1,12 @@
 import React from 'react';
-import { auth } from '@/lib/better-auth/auth';
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { getWatchlist } from '@/lib/actions/watchlist.actions';
+import { getAnonymousId } from '@/lib/actions/anonymous.actions';
 import { fetchStockQuote, fetchStockFinancials } from '@/lib/actions/finnhub.actions';
 import WatchlistTable from '@/components/WatchlistTable';
 import { formatPrice, formatChangePercent, formatMarketCapValue, getFormattedTodayDate } from '@/lib/utils';
 
 const WatchlistPage = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    redirect('/sign-in');
-  }
-
-  const userId = session.user.id;
+  const userId = await getAnonymousId();
   const rawWatchlist = await getWatchlist(userId);
 
   const enrichedWatchlist = await Promise.all(

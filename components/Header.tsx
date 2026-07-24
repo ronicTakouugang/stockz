@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import NavItems from "@/components/NavItems";
-import UserDropDown from "@/components/UserDropDown";
+import MobileNav from "@/components/MobileNav";
 
-const Header = ({user, initialStocks}:{user:User, initialStocks: StockWithWatchlistStatus[]}) => {
+const Header = ({initialStocks}:{initialStocks: StockWithWatchlistStatus[]}) => {
     return (
        <header className="sticky top-0 header">
            <div className="container header-wrapper">
@@ -13,7 +13,7 @@ const Header = ({user, initialStocks}:{user:User, initialStocks: StockWithWatchl
                <nav className="hidden sm:block">
                    <NavItems initialStocks={initialStocks} />
                </nav>
-               <UserDropDown user={user} initialStocks={initialStocks}/>
+               <MobileNav initialStocks={initialStocks} />
            </div>
        </header>
     )

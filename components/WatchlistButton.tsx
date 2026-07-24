@@ -3,8 +3,8 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Star, Loader2, Trash2 } from 'lucide-react'
-import { authClient } from '@/lib/better-auth/auth-client'
 import { addToWatchlist, removeFromWatchlist } from '@/lib/actions/watchlist.actions'
+import { getAnonymousId } from '@/lib/actions/anonymous.actions'
 import { toast } from 'sonner'
 
 interface WatchlistButtonProps {
@@ -24,7 +24,6 @@ const WatchlistButton = ({
   type = 'button',
   onWatchlistChange,
 }: WatchlistButtonProps) => {
-  const { data: session } = authClient.useSession()
   const [isInWatchlist, setIsInWatchlist] = React.useState(initialIsInWatchlist)
   const [loading, setLoading] = React.useState(false)
 
@@ -36,17 +35,11 @@ const WatchlistButton = ({
     e.preventDefault()
     e.stopPropagation()
 
-    if (!session?.user) {
-      toast.error("Authentication required", {
-        description: "Please sign in to manage your watchlist",
-      })
-      return
-    }
-
     setLoading(true)
     try {
+      const userId = await getAnonymousId()
       if (isInWatchlist) {
-        const res = await removeFromWatchlist({ userId: session.user.id, symbol })
+        const res = await removeFromWatchlist({ userId, symbol })
         if (res.success) {
           setIsInWatchlist(false)
           onWatchlistChange?.(symbol, false)
@@ -55,7 +48,7 @@ const WatchlistButton = ({
           })
         }
       } else {
-        const res = await addToWatchlist({ userId: session.user.id, symbol, company })
+        const res = await addToWatchlist({ userId, symbol, company })
         if (res.success) {
           setIsInWatchlist(true)
           onWatchlistChange?.(symbol, true)

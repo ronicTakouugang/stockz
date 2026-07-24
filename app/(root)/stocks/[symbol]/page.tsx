@@ -7,8 +7,7 @@ import {
 } from "@/lib/constants";
 import WatchlistButton from "@/components/WatchlistButton";
 import {fetchStockDetails} from "@/lib/actions/finnhub.actions";
-import {auth} from "@/lib/better-auth/auth";
-import {headers} from "next/headers";
+import {getAnonymousId} from "@/lib/actions/anonymous.actions";
 import {isSymbolInWatchlist} from "@/lib/actions/watchlist.actions";
 import PredictionDashboard from "@/components/PredictionDashboard";
 import { TrendingUp } from "lucide-react";
@@ -22,12 +21,9 @@ const StockDetails = async ({ params }: StockDetailsPageProps) => {
     // Fetch stock details
     const stock = await fetchStockDetails(upperSymbol);
 
-    // Fetch user and watchlist status
-    const session = await auth.api.getSession({
-        headers: await headers()
-    });
-    const userId = session?.user?.id;
-    const isInWatchlist = userId ? await isSymbolInWatchlist(userId, upperSymbol) : false;
+    // Fetch watchlist status
+    const userId = await getAnonymousId();
+    const isInWatchlist = await isSymbolInWatchlist(userId, upperSymbol);
 
     return (
         <section className="w-full flex flex-col gap-10">

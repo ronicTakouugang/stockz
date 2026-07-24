@@ -3,6 +3,7 @@
 import { connectToDatabase } from "@/database/mongoose";
 import Alert from "@/database/models/alert.model";
 import { revalidatePath } from "next/cache";
+import { getAnonymousId } from "@/lib/actions/anonymous.actions";
 
 export async function createAlert(data: {
   symbol: string;
@@ -12,16 +13,12 @@ export async function createAlert(data: {
   threshold: number;
 }) {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if(!session?.user) {
-        throw new Error("User not authenticated");
-    }
-    const userId = session.user.id;
+    const userId = await getAnonymousId();
 
     await connectToDatabase();
-    
+
     const newAlert = await Alert.create({ ...data, userId });
-    
+
     revalidatePath("/watchlist");
     return { success: true, data: JSON.parse(JSON.stringify(newAlert)) };
   } catch (error) {
@@ -30,17 +27,11 @@ export async function createAlert(data: {
   }
 }
 
-import {auth} from "@/lib/better-auth/auth";
-import {headers} from "next/headers";
-
 export async function getAlerts() {
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if(!session?.user) {
-        throw new Error("User not authenticated");
-    }
+    const userId = await getAnonymousId();
     await connectToDatabase();
-    const alerts = await Alert.find({ userId: session.user.id }).sort({ createdAt: -1 });
+    const alerts = await Alert.find({ userId }).sort({ createdAt: -1 });
     return JSON.parse(JSON.stringify(alerts));
   } catch (error) {
     console.error("Error fetching alerts:", error);

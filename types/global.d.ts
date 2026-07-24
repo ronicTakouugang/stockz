@@ -1,21 +1,6 @@
 import { Control, UseFormRegister, FieldError, RegisterOptions } from "react-hook-form";
 
 declare global {
-    type SignInFormData = {
-        email: string;
-        password: string;
-    };
-
-    type SignUpFormData = {
-        fullName: string;
-        email: string;
-        password: string;
-        country: string;
-        investmentGoals: string;
-        riskTolerance: string;
-        preferredIndustry: string;
-    };
-
     type CountrySelectProps = {
         name: string;
         label: string;
@@ -51,34 +36,16 @@ declare global {
         required?: boolean;
     };
 
-    type FooterLinkProps = {
-        text: string;
-        linkText: string;
-        href: string;
-    };
-
     type SearchCommandProps = {
         renderAs?: 'button' | 'text';
         label?: string;
         initialStocks: StockWithWatchlistStatus[];
     };
 
-    type WelcomeEmailData = {
-        email: string;
-        name: string;
-        intro: string;
-    };
-
     type UserForNewsEmail = {
         id: string;
         email: string;
         name: string;
-    };
-
-    type User = {
-        id: string;
-        name?: string | null;
-        email: string;
     };
 
     type Stock = {
